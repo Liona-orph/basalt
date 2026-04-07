@@ -1,0 +1,8 @@
+# The minimum supported Rust version, so clippy does not suggest APIs that are
+# newer than the toolchain this workspace pins in rust-toolchain.toml.
+msrv = "1.83.0"
+
+# Identifiers that look like they should be back-ticked but are not code.
+# `doc_markdown` is allowed workspace-wide, so this only matters if it is ever
+# switched back on; it is kept here as the list of words we would exempt.
+doc-valid-idents = ["CRC32C", "LZ77", "LEB128", "UTF-8", "IEEE-754", "HyperLogLog", "..."]

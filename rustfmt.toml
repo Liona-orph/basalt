@@ -1,0 +1,10 @@
+# Stable rustfmt options only, so `cargo fmt` behaves identically on the pinned
+# 1.83 toolchain and on nightly. Everything else is rustfmt's default on
+# purpose: a house style that differs from the ecosystem's costs every reader
+# something and buys nothing.
+edition = "2021"
+max_width = 100
+tab_spaces = 4
+hard_tabs = false
+newline_style = "Unix"
+use_small_heuristics = "Default"

@@ -1,0 +1,19 @@
+# Build output
+/target
+**/*.rs.bk
+
+# Cargo.lock *is* committed, following current Cargo guidance for all projects:
+# it makes CI reproducible and it is what `cargo audit` reads. It does not
+# constrain downstream consumers, who resolve their own.
+
+# Segment files written by tests, benchmarks and scratch programs
+*.bslt
+
+# Criterion output
+/criterion
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+.DS_Store

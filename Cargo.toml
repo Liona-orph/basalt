@@ -1,0 +1,145 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/basalt-common",
+    "crates/basalt-types",
+    "crates/basalt-encoding",
+    "crates/basalt-storage",
+    "crates/basalt-sql",
+    "crates/basalt-plan",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.83"
+license = "Apache-2.0"
+repository = "https://github.com/basalt-db/basalt"
+authors = ["The Basalt authors"]
+
+# ---------------------------------------------------------------------------
+# Dependency policy
+# ---------------------------------------------------------------------------
+# Basalt is a from-first-principles columnar engine. Every third-party crate has
+# to earn its place, because the whole point of the project is that the storage
+# format, the compression and the vectorised representation are *ours*. In
+# particular we deliberately do NOT depend on arrow / parquet / datafusion or any
+# other database crate: bit packing, dictionary encoding, zone maps, bloom
+# filters and CRC32C are all implemented in-tree.
+#
+# Runtime dependencies (exactly one):
+#   thiserror  - derive for `std::error::Error` impls. Pure proc-macro, no runtime
+#                cost, and hand-writing Display/Error for ~20 variants across the
+#                workspace is pure boilerplate with a real risk of drift.
+#
+# Deliberately NOT taken:
+#   bytes      - our buffers are `Arc<Vec<T>>` slices with explicit offsets; the
+#                `Bytes` type only covers `u8` and would not help the typed
+#                buffers, so it would be a dependency for one crate's worth of
+#                convenience.
+#   crc32c/crc - the Castagnoli table fits in 30 lines (see basalt-storage::crc).
+#   hashbrown  - std's HashMap is the same implementation.
+#   sqlparser / - the SQL front end in basalt-sql is a hand-written lexer plus a
+#   lalrpop /     recursive-descent parser with a Pratt expression parser. A
+#   pest          generated parser would hide the one thing the front end is
+#                 actually judged on - the quality of its error messages - behind
+#                 a table-driven "unexpected token" report, and a borrowed AST
+#                 would not carry the byte spans the binder needs to point at.
+#
+# Dev-dependencies:
+#   proptest   - property tests are the only credible way to test codecs and
+#                bitmaps (round-trip and reference-implementation equivalence).
+#   criterion  - statistically sound benchmarks; the numbers in BENCHMARKS.md
+#                come from it.
+#   tempfile   - storage tests need real files on disk to exercise the reader's
+#                positioned-read path.
+[workspace.dependencies]
+thiserror = "2.0"
+
+basalt-common = { path = "crates/basalt-common", version = "0.1.0" }
+basalt-types = { path = "crates/basalt-types", version = "0.1.0" }
+basalt-encoding = { path = "crates/basalt-encoding", version = "0.1.0" }
+basalt-storage = { path = "crates/basalt-storage", version = "0.1.0" }
+basalt-sql = { path = "crates/basalt-sql", version = "0.1.0" }
+basalt-plan = { path = "crates/basalt-plan", version = "0.1.0" }
+
+# Exact pins: these are the newest releases that still build on the pinned
+# 1.83 toolchain (later versions pull in edition-2024 transitive dependencies).
+proptest = "=1.5.0"
+criterion = { version = "=0.4.0", default-features = false, features = ["cargo_bench_support"] }
+tempfile = "=3.13.0"
+
+# ---------------------------------------------------------------------------
+# Lints
+# ---------------------------------------------------------------------------
+# Inherited by every crate via `[lints] workspace = true`.
+[workspace.lints.rust]
+# We `#![forbid(unsafe_code)]` per crate, so this is belt-and-braces: should an
+# exception ever be justified, the unsafe block must still be explicit.
+unsafe_op_in_unsafe_fn = "deny"
+missing_docs = "warn"
+missing_debug_implementations = "warn"
+unreachable_pub = "warn"
+rust_2018_idioms = { level = "warn", priority = -1 }
+
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+# Enforce the project rule "no unwrap outside tests". Test modules opt out
+# locally with an inner `#![allow(clippy::unwrap_used)]`, which makes every
+# exception grep-able.
+unwrap_used = "deny"
+# `expect` is allowed but rare: it is reserved for invariants that are
+# established by a constructor in the same module and is always accompanied by a
+# comment naming the invariant (see `StringArray::value`).
+expect_used = "allow"
+# --- pedantic lints we switch off, with reasons ---------------------------
+# `basalt_types::TypeError`-style names read better than `types::Error` at call
+# sites in other crates.
+module_name_repetitions = "allow"
+# Almost every accessor on a columnar container is a "must_use candidate"; the
+# signal-to-noise ratio is far too low.
+must_use_candidate = "allow"
+# Errors are documented centrally on `BasaltError`; repeating a `# Errors`
+# section on ~200 `Result`-returning accessors would bury the useful docs.
+missing_errors_doc = "allow"
+# Fires on every slice index and integer division. We document real panics.
+missing_panics_doc = "allow"
+# Width conversions are the daily business of an encoding layer (bit widths,
+# offsets, lane counts). Each site is bounds-checked or provably in range and
+# says so; a blanket lint here would be 300 individual allows.
+cast_possible_truncation = "allow"
+cast_sign_loss = "allow"
+cast_possible_wrap = "allow"
+cast_precision_loss = "allow"
+# We prefer explicit `if`/`match` in decision procedures such as `analyze()`,
+# because the branches carry comments explaining the heuristic.
+if_not_else = "allow"
+# Long, precise doc paragraphs are the point.
+doc_markdown = "allow"
+# Same reason as `must_use_candidate`: `slice`, `compact` and friends return
+# `Self` on nearly every container here.
+return_self_not_must_use = "allow"
+# The type-dispatch matches (one arm per physical type) frequently have
+# textually identical bodies with different types; merging them would mean
+# giving up the exhaustiveness check that makes adding a type safe.
+match_same_arms = "allow"
+
+# ---------------------------------------------------------------------------
+# Profiles
+# ---------------------------------------------------------------------------
+[profile.release]
+opt-level = 3
+# Cross-crate inlining matters a lot here: the hot loops in basalt-encoding are
+# generic over the codec and call into basalt-types accessors.
+lto = "thin"
+codegen-units = 1
+# Keep line tables: profiling a release build of a database engine without them
+# is miserable, and they cost nothing at runtime.
+debug = 1
+panic = "unwind"
+
+[profile.bench]
+inherits = "release"
+
+[profile.test]
+opt-level = 1
