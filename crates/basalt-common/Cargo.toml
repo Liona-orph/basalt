@@ -1,0 +1,15 @@
+[package]
+name = "basalt-common"
+description = "Shared errors, configuration and small utilities for the Basalt columnar engine"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+thiserror.workspace = true
+
+[lints]
+workspace = true
