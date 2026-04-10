@@ -1,0 +1,18 @@
+[package]
+name = "basalt-types"
+description = "Type system and columnar in-memory representation for the Basalt engine"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+basalt-common.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true
+
+[lints]
+workspace = true
