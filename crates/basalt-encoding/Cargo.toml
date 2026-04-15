@@ -1,0 +1,24 @@
+[package]
+name = "basalt-encoding"
+description = "Columnar compression codecs and encoding selection for the Basalt engine"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+basalt-common.workspace = true
+basalt-types.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true
+criterion.workspace = true
+
+[[bench]]
+name = "codecs"
+harness = false
+
+[lints]
+workspace = true
