@@ -1,0 +1,21 @@
+[package]
+name = "basalt-storage"
+description = "On-disk segment format for the Basalt engine: row groups, zone maps, bloom filters, CRC32C"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+basalt-common.workspace = true
+basalt-types.workspace = true
+basalt-encoding.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true
+tempfile.workspace = true
+
+[lints]
+workspace = true
