@@ -1,0 +1,10 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 1810ce23adf03aaf533c609d6f6816ec81447cd225c414b2396c1706b0547649 # shrinks to sql = "a BETWEEN a IS NULL AND a"
+cc 7fb99bcd2c03e193ef47fe5ae23d3c4fe1f7b476447ededeeda33f61bd5af565 # shrinks to sql = "--a"
+cc c17beb5bdd86a44e3f41b2a6b2af59dc1be26e862c09f6d96bb59be9b805ee7b # shrinks to sql = "SELECT CASE WHEN a THEN a ELSE --a END FROM t WHERE a"
+cc c4d12717cf330b79413e929c5c216126f6ce19555a8793aafa6ab5cc15b47d35 # shrinks to sql = "a BETWEEN a = a AND a"

@@ -1,0 +1,22 @@
+[package]
+name = "basalt-sql"
+description = "Hand-written SQL lexer, AST and recursive-descent parser for the Basalt engine"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+basalt-common.workspace = true
+# The AST stores `CAST` targets as `basalt_types::DataType` rather than an
+# independent "SQL type name" enum. There is exactly one type system in this
+# engine; a second one that has to be kept in step with it is a bug farm.
+basalt-types.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true
+
+[lints]
+workspace = true
