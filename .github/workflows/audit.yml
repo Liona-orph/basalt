@@ -1,0 +1,37 @@
+name: Audit
+
+on:
+  schedule:
+    # 06:17 UTC on Mondays. Off the hour on purpose: advisories are published
+    # continuously and every project scheduling itself at :00 makes the RustSec
+    # database's traffic spikier than it needs to be.
+    - cron: '17 6 * * 1'
+  push:
+    paths:
+      - '**/Cargo.toml'
+      - 'Cargo.lock'
+      - '.github/workflows/audit.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: audit-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: cargo audit
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      # rustsec/audit-check opens an issue when it finds an advisory on a
+      # scheduled run, which is the only way a weekly job can reach anyone.
+      issues: write
+      checks: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: rustsec/audit-check@69366f33c96575abad1ee0dba8212993eecbe998 # v2.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
