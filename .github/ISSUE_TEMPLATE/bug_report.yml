@@ -1,0 +1,83 @@
+name: Bug report
+description: Something behaves differently from what the documentation says.
+title: '[bug] '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing: Basalt has **no optimizer and no executor**, so no query returns rows.
+        "My query returned nothing" is expected. See
+        [Status and what is not implemented](https://github.com/basalt-db/basalt#status-and-what-is-not-implemented)
+        and the known limitations listed there.
+
+        For a security issue, do **not** open an issue — see
+        [SECURITY.md](https://github.com/basalt-db/basalt/blob/main/SECURITY.md).
+
+  - type: dropdown
+    id: crate
+    attributes:
+      label: Which crate
+      options:
+        - basalt-common
+        - basalt-types
+        - basalt-encoding
+        - basalt-storage
+        - basalt-sql
+        - basalt-plan
+        - not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What did you observe, and what did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: >
+        The smallest input that shows the problem — a SQL statement, a few lines
+        of Rust, or a byte sequence. A minimal case is worth more than a long
+        description.
+      render: rust
+    validations:
+      required: true
+
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: The full error, panic message or plan, verbatim.
+      render: text
+
+  - type: input
+    id: version
+    attributes:
+      label: Basalt version or commit
+      placeholder: '0.1.0, or a commit SHA'
+    validations:
+      required: true
+
+  - type: input
+    id: toolchain
+    attributes:
+      label: Toolchain and platform
+      description: '`rustc -vV` in one line.'
+      placeholder: 'rustc 1.83.0, aarch64-apple-darwin'
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I read the known limitations and this is not one of them.
+          required: true
+        - label: I can reproduce this on `main`.
