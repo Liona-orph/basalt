@@ -9,7 +9,7 @@
 //!   problem. Hints are only attached where the fix is unambiguous — a wrong
 //!   guess is worse than no guess.
 
-use std::fmt;
+use std::fmt::{self, Write as _};
 
 use basalt_common::BasaltError;
 
@@ -108,16 +108,20 @@ impl SqlError {
         let gutter = format!("{line}");
         let pad = " ".repeat(gutter.len());
         let mut out = format!("error: {}\n", self.message);
-        out.push_str(&format!("{pad}--> {line}:{column}\n"));
-        out.push_str(&format!("{pad} |\n"));
-        out.push_str(&format!("{gutter} | {text}\n"));
-        out.push_str(&format!(
-            "{pad} | {}{}\n",
+        // `String` implements `fmt::Write` infallibly; using it avoids a
+        // temporary allocation for every diagnostic line.
+        writeln!(&mut out, "{pad}--> {line}:{column}").expect("writing to a String is infallible");
+        writeln!(&mut out, "{pad} |").expect("writing to a String is infallible");
+        writeln!(&mut out, "{gutter} | {text}").expect("writing to a String is infallible");
+        writeln!(
+            &mut out,
+            "{pad} | {}{}",
             " ".repeat(column - 1),
             "^".repeat(width)
-        ));
+        )
+        .expect("writing to a String is infallible");
         if let Some(hint) = &self.hint {
-            out.push_str(&format!("{pad} = hint: {hint}\n"));
+            writeln!(&mut out, "{pad} = hint: {hint}").expect("writing to a String is infallible");
         }
         out
     }

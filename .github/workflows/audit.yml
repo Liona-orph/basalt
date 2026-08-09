@@ -26,12 +26,15 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: read
-      # rustsec/audit-check opens an issue when it finds an advisory on a
-      # scheduled run, which is the only way a weekly job can reach anyone.
-      issues: write
-      checks: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: rustsec/audit-check@69366f33c96575abad1ee0dba8212993eecbe998 # v2.0.0
+      # The project itself stays on Rust 1.83, while cargo-audit needs a newer
+      # compiler. The audit tool never compiles Basalt, so run it explicitly
+      # under stable instead of making the project toolchain drift.
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          toolchain: stable
+      - name: Install cargo-audit
+        run: cargo +stable install cargo-audit --version 0.22.2 --locked
+      - name: Audit Cargo.lock
+        run: cargo +stable audit

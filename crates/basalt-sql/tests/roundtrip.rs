@@ -7,6 +7,8 @@
 
 #![allow(clippy::unwrap_used)]
 
+use std::fmt::Write as _;
+
 use basalt_sql::{parse, parse_expression};
 use proptest::prelude::*;
 
@@ -116,7 +118,7 @@ fn arbitrary_query() -> impl Strategy<Value = String> {
                     sql.push_str(direction);
                 }
                 if let Some(limit) = limit {
-                    sql.push_str(&format!(" LIMIT {limit}"));
+                    write!(&mut sql, " LIMIT {limit}").expect("writing to a String is infallible");
                 }
                 sql
             },
