@@ -1489,7 +1489,7 @@ mod tests {
         let joined = concat(&[a.clone(), b]).unwrap();
         assert_eq!(joined.len(), 3);
         assert_eq!(joined.value(2), Value::Utf8("three".into()));
-        assert_eq!(concat(&[a.clone()]).unwrap(), a);
+        assert_eq!(concat(std::slice::from_ref(&a)).unwrap(), a);
 
         let with_nulls = ColumnVector::Int64(PrimitiveArray::from_opt_vec(vec![Some(1), None]));
         let dense = ColumnVector::Int64(PrimitiveArray::from_vec(vec![3]));

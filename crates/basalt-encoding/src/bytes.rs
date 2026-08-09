@@ -419,7 +419,7 @@ mod tests {
             ),
             ("long match", {
                 let mut v = vec![0u8; 300];
-                v.extend(std::iter::repeat(0u8).take(3000));
+                v.extend(std::iter::repeat_n(0u8, 3000));
                 v
             }),
         ]

@@ -156,7 +156,8 @@ fn round_trip_over_many_shapes() {
                     .with_row_group_rows(row_group_rows)
                     .with_compression_level(level);
                 let batch = wide_batch(&schema, rows, (rows * 31 + row_group_rows) as u64);
-                let (bytes, metadata) = write_segment(&schema, &[batch.clone()], config);
+                let (bytes, metadata) =
+                    write_segment(&schema, std::slice::from_ref(&batch), config);
 
                 let reader = SegmentReader::open(bytes).unwrap();
                 assert_eq!(reader.schema().as_ref(), schema.as_ref());
@@ -419,7 +420,7 @@ fn zone_maps_match_a_reference_scan() {
         .with_batch_size(64)
         .with_row_group_rows(500);
     let batch = wide_batch(&schema, 2000, 1234);
-    let (_, metadata) = write_segment(&schema, &[batch.clone()], config);
+    let (_, metadata) = write_segment(&schema, std::slice::from_ref(&batch), config);
 
     for (group_index, group) in metadata.row_groups.iter().enumerate() {
         let offset = group_index * 500;
