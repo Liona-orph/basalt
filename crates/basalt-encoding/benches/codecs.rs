@@ -7,7 +7,7 @@
 
 #![allow(clippy::unwrap_used)]
 
-use std::time::Duration;
+use std::{hint::black_box, time::Duration};
 
 use basalt_common::CompressionLevel;
 use basalt_encoding::{
@@ -15,7 +15,7 @@ use basalt_encoding::{
     encode_integers, Codec, Encoding, PlainBytesCodec,
 };
 use basalt_types::{ColumnVector, PrimitiveArray, StringArray};
-use criterion::{black_box, BenchmarkId, Criterion, Throughput};
+use criterion::{BenchmarkId, Criterion, Throughput};
 
 const N: usize = 65_536;
 

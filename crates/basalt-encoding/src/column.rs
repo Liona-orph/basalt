@@ -399,11 +399,9 @@ pub fn decode_column(bytes: &[u8], data_type: &DataType) -> Result<ColumnVector>
         DataType::Float32 => {
             let values: Vec<f32> = decode_integers(body)?
                 .into_iter()
-                .map(|v| {
-                    u32::try_from(v as u64 & 0xFFFF_FFFF)
-                        .map(f32::from_bits)
-                        .unwrap_or(f32::NAN)
-                })
+                // Integer codecs transport the IEEE representation. A cast to
+                // u32 preserves exactly the low 32 bits, including NaN payloads.
+                .map(|v| f32::from_bits(v as u32))
                 .collect();
             ColumnVector::Float32(PrimitiveArray::try_new(Buffer::from_vec(values), validity)?)
         }

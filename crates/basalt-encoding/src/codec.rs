@@ -252,7 +252,11 @@ pub(crate) fn capacity_hint(count: usize, available: usize, min_bytes_per_value:
     if min_bytes_per_value == 0 {
         count.min(NO_BYTE_BOUND_CAP)
     } else {
-        count.min(available / min_bytes_per_value + 1)
+        let byte_bound = available
+            .checked_div(min_bytes_per_value)
+            .unwrap_or(0)
+            .saturating_add(1);
+        count.min(byte_bound)
     }
 }
 
@@ -324,6 +328,9 @@ mod tests {
         assert_eq!(capacity_hint(10, 1000, 8), 10);
         assert_eq!(capacity_hint(1_000_000, 16, 8), 3);
         assert_eq!(capacity_hint(usize::MAX, 0, 0), 1 << 20);
+        // A corrupted header can claim `usize::MAX` elements. Capacity
+        // calculation must clamp safely rather than overflowing `+ 1`.
+        assert_eq!(capacity_hint(usize::MAX, usize::MAX, 1), usize::MAX);
     }
 
     #[test]

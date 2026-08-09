@@ -28,7 +28,7 @@ pub const fn uvarint_len(value: u64) -> usize {
     if bits == 0 {
         1
     } else {
-        ((bits + 6) / 7) as usize
+        bits.div_ceil(7) as usize
     }
 }
 
