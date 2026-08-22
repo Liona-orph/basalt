@@ -13,7 +13,7 @@ Basalt is pre-1.0 and has no released binaries. Fixes go to `main`.
 **Do not open a public issue.**
 
 Use GitHub's private reporting — *Security* → *Report a vulnerability* on
-<https://github.com/basalt-db/basalt> — or email <security@basalt-db.org>.
+<https://github.com/Liona-orph/basalt>.
 
 Please include:
 

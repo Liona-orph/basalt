@@ -4,7 +4,7 @@ An embedded columnar analytical database engine written in Rust from first princ
 system, columnar arrays, compression codecs, on-disk segment format, SQL parser and query planner,
 with no `arrow`, `parquet`, `datafusion` or `sqlparser` anywhere in the dependency graph.
 
-[![CI](https://github.com/basalt-db/basalt/actions/workflows/ci.yml/badge.svg)](https://github.com/basalt-db/basalt/actions/workflows/ci.yml)
+[![CI](https://github.com/Liona-orph/basalt/actions/workflows/ci.yml/badge.svg)](https://github.com/Liona-orph/basalt/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Rust 1.83](https://img.shields.io/badge/rust-1.83-orange.svg)](rust-toolchain.toml)
 

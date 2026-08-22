@@ -3,21 +3,21 @@
 # GitHub applies the *last* matching pattern, so the specific rules below
 # override the catch-all.
 
-*                                   @basalt-db/maintainers
+*                                   @Liona-orph
 
 # The on-disk format and the type system are compatibility surfaces: a change
 # here can make existing segment files unreadable or silently change what a
 # query means.
-/crates/basalt-storage/FORMAT.md    @basalt-db/maintainers @basalt-db/format-owners
-/crates/basalt-storage/src/format.rs @basalt-db/maintainers @basalt-db/format-owners
-/crates/basalt-storage/src/serial.rs @basalt-db/maintainers @basalt-db/format-owners
-/crates/basalt-types/src/datatype.rs @basalt-db/maintainers @basalt-db/format-owners
+/crates/basalt-storage/FORMAT.md    @Liona-orph
+/crates/basalt-storage/src/format.rs @Liona-orph
+/crates/basalt-storage/src/serial.rs @Liona-orph
+/crates/basalt-types/src/datatype.rs @Liona-orph
 
 # Decision records are not edited in place; a reversal is a new record.
-/docs/adr/                          @basalt-db/maintainers
+/docs/adr/                          @Liona-orph
 
 # Build, CI and dependency policy.
-/.github/                           @basalt-db/maintainers
-/Cargo.toml                         @basalt-db/maintainers
-/Makefile                           @basalt-db/maintainers
-/rust-toolchain.toml                @basalt-db/maintainers
+/.github/                           @Liona-orph
+/Cargo.toml                         @Liona-orph
+/Makefile                           @Liona-orph
+/rust-toolchain.toml                @Liona-orph

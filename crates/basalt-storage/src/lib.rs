@@ -3,7 +3,7 @@
 //! A **segment** is one immutable columnar file. It holds a schema, a sequence
 //! of **row groups**, and per-**column chunk** metadata rich enough that a query
 //! can decide not to read most of the file. The byte-level specification is in
-//! [`FORMAT.md`](https://github.com/basalt-db/basalt/blob/main/crates/basalt-storage/FORMAT.md);
+//! [`FORMAT.md`](https://github.com/Liona-orph/basalt/blob/main/crates/basalt-storage/FORMAT.md);
 //! this crate is its implementation, and the two are kept in step deliberately.
 //!
 //! ```text

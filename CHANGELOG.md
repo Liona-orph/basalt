@@ -88,5 +88,5 @@ Pinned toolchain (Rust 1.83), workspace lints including `clippy::pedantic` and
 what CI runs, GitHub Actions for fmt/clippy/test/doc/bench, a scheduled `cargo audit`, and
 Dependabot for cargo and actions.
 
-[Unreleased]: https://github.com/basalt-db/basalt/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/basalt-db/basalt/releases/tag/v0.1.0
+[Unreleased]: https://github.com/Liona-orph/basalt/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Liona-orph/basalt/releases/tag/v0.1.0
