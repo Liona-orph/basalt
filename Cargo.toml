@@ -65,7 +65,7 @@ basalt-plan = { path = "crates/basalt-plan", version = "0.1.0" }
 
 # Exact pins: these are the newest releases that still build on the pinned
 # 1.83 toolchain (later versions pull in edition-2024 transitive dependencies).
-proptest = "=1.5.0"
+proptest = "=1.12.0"
 criterion = { version = "=0.7.0", default-features = false, features = ["cargo_bench_support"] }
 tempfile = "=3.13.0"
 
